@@ -1,14 +1,17 @@
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Reporting Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Read INSTRUCTIONS.md to get started.
-        </p>
-      </div>
-    </div>
-  );
+import { getReport } from '@/lib/reporting'
+import { getOrganizations } from '@/lib/organizations'
+import DashboardClient from './components/DashboardClient'
+
+export default async function Home() {
+  const [initialData, organizations] = await Promise.all([
+    getReport({
+      orgId: 1,
+      startDate: '2026-02-09',
+      endDate: '2026-03-10',
+      metrics: ['revenue', 'meta_spend', 'google_spend', 'profit', 'roas'],
+    }),
+    getOrganizations(),
+  ])
+
+  return <DashboardClient initialData={initialData} organizations={organizations} />
 }
